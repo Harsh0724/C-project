@@ -1,0 +1,96 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+// function to generate a random number between 1 and n
+int generate_random_number(int n)
+{
+    srand(time(NULL));
+    return rand() % n + 1;
+}
+
+// function to get the player's choice of odd or even
+char get_player_choice()
+{
+    char choice;
+    printf("Odd or Even? (o/e): ");
+    scanf(" %c", &choice);
+    return choice;
+}
+
+// function to get the player's chosen number
+int get_player_number()
+{
+    int number;
+    printf("Choose a number between 1 and 10: ");
+    scanf("%d", &number);
+    return number;
+}
+
+// function to determine the winner of the round
+int get_round_winner(int player_number, int computer_number, char player_choice)
+{
+    int sum = player_number + computer_number;
+    if (sum % 2 == 0 && player_choice == 'e')
+        return 1;  // player wins
+    else if (sum % 2 == 0 && player_choice == 'o')
+        return -1; // computer wins
+    else if (sum % 2 != 0 && player_choice == 'o')
+        return 1;  // player wins
+    else
+        return -1; // computer wins
+}
+
+// function to play a round and update the scores
+void play_round(int *player_score, int *computer_score)
+{
+    // get player's choice and number
+    char player_choice = get_player_choice();
+    int player_number = get_player_number();
+
+    // generate computer's number
+    int computer_number = generate_random_number(10);
+
+    printf("Player chose %d, computer chose %d\n", player_number, computer_number);
+
+    // determine round winner and update scores
+    int round_winner = get_round_winner(player_number, computer_number, player_choice);
+    if (round_winner == 1)
+    {
+        printf("Player wins the round!\n");
+        *player_score += 1;
+    }
+    else
+    {
+        printf("Computer wins the round!\n");
+        *computer_score += 1;
+    }
+}
+
+void play_game(int num_rounds)
+{
+    int player_score = 0, computer_score = 0;
+    for (int i = 0; i < num_rounds; i++)
+    {
+        printf("Round %d:\n", i+1);
+        play_round(&player_score, &computer_score);
+        printf("Score: Player %d, Computer %d\n", player_score, computer_score);
+    }
+    if (player_score > computer_score)
+        printf("Player wins the game!\n");
+    else if (player_score < computer_score)
+        printf("Computer wins the game!\n");
+    else
+        printf("It's a tie!\n");
+}
+
+
+int main()
+{
+    int num_rounds;
+    printf("Welcome to the Odd-Even game!\n");
+    printf("How many rounds would you like to play? ");
+    scanf("%d", &num_rounds);
+    play_game(num_rounds);
+    return 0;
+}
